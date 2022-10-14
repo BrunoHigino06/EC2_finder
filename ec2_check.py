@@ -2,8 +2,8 @@ import os, boto3, json
 
 def ec2_check(accountid):
     privateip = ""
-    instacename = ""
-
+    key = ""
+    value = ""
     organizations = boto3.client('organizations')
     org_response = organizations.describe_account(
         AccountId=accountid
@@ -19,5 +19,5 @@ def ec2_check(accountid):
     if privateip != "":
         os.system("aws ec2 describe-instances --filter 'Name=network-interface.addresses.private-ip-address,Values="+privateip+" --query 'Reservations[].Instances[].{InstanceId:InstanceId,PrivateIP:PrivateIpAddress,Tag:Tags}'")
 
-    if  instacename != "":
-        os.system("aws ec2 describe-instances --filter 'Name=tag:Name,Values='"+instacename+" --query 'Reservations[].Instances[].{InstanceId:InstanceId,PrivateIP:PrivateIpAddress,Tag:Tags}'")
+    if  key or value != "":
+        os.system("aws ec2 describe-instances --filter 'Name=tag:"+key+",Values='"+value+" --query 'Reservations[].Instances[].{InstanceId:InstanceId,PrivateIP:PrivateIpAddress,Tag:Tags}'")
